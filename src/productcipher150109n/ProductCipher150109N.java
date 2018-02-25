@@ -7,7 +7,7 @@ package productcipher150109n;
 
 /**
  *
- * @author ASUS
+ * @author Ashen De Silva
  */
 public class ProductCipher150109N {
 
@@ -16,6 +16,10 @@ public class ProductCipher150109N {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        Cryptographer machine = new Cryptographer();
+        String encrypted=machine.encrypt("My name is ashen. What's up yo? How you doing?", true);
+        System.out.println(encrypted);
+        System.out.println(machine.encrypt(encrypted, false));
     }
     
 }
