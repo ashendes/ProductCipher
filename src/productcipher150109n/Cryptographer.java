@@ -18,6 +18,10 @@ public class Cryptographer {
     
     private final int rounds, blockSize;
     private String key;
+
+    public String getKey() {
+        return key;
+    }
     String alphabet="0123456789";
     
     public Cryptographer(){        
@@ -37,7 +41,7 @@ public class Cryptographer {
         return keyBuilder.toString();        
     }
     
-    public String encrypt(String message, boolean encrypt){
+    public String encrypt(String message,String key, boolean encrypt){
         /*for(int round=0;round<=rounds;round++){
             for(int i=0; i<=block.length();i++){
                 

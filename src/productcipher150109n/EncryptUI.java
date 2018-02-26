@@ -5,17 +5,25 @@
  */
 package productcipher150109n;
 
+import javax.swing.JFileChooser;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 /**
  *
  * @author Ashen De Silva
  */
 public class EncryptUI extends javax.swing.JFrame {
 
+    String encryptedText;
+    Cryptographer c;
+    String selectedFilePath;
+    String decryptText;
     /**
      * Creates new form EncryptUI
      */
     public EncryptUI() {
         initComponents();
+        c = new Cryptographer();
     }
 
     /**
@@ -33,19 +41,20 @@ public class EncryptUI extends javax.swing.JFrame {
         jLabel2 = new javax.swing.JLabel();
         keygenText = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTextArea1 = new javax.swing.JTextArea();
+        textArea = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jLabel3 = new javax.swing.JLabel();
         decryptKeyText = new javax.swing.JTextField();
         btnFileChooser = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
-        encryptedText = new javax.swing.JTextArea();
+        encryptedTextArea = new javax.swing.JTextArea();
         jLabel5 = new javax.swing.JLabel();
         btnDecrpyt = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
-        decryptedText = new javax.swing.JTextArea();
+        decryptedTextArea = new javax.swing.JTextArea();
         jLabel6 = new javax.swing.JLabel();
+        selectedFile = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
@@ -61,9 +70,9 @@ public class EncryptUI extends javax.swing.JFrame {
 
         keygenText.setEditable(false);
 
-        jTextArea1.setColumns(20);
-        jTextArea1.setRows(5);
-        jScrollPane1.setViewportView(jTextArea1);
+        textArea.setColumns(20);
+        textArea.setRows(5);
+        jScrollPane1.setViewportView(textArea);
 
         jLabel4.setText("Enter text:");
 
@@ -115,11 +124,16 @@ public class EncryptUI extends javax.swing.JFrame {
         });
 
         btnFileChooser.setText("Select file to be decrypted");
+        btnFileChooser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnFileChooserActionPerformed(evt);
+            }
+        });
 
-        encryptedText.setEditable(false);
-        encryptedText.setColumns(20);
-        encryptedText.setRows(5);
-        jScrollPane2.setViewportView(encryptedText);
+        encryptedTextArea.setEditable(false);
+        encryptedTextArea.setColumns(20);
+        encryptedTextArea.setRows(5);
+        jScrollPane2.setViewportView(encryptedTextArea);
 
         jLabel5.setText("Encrypted Text:");
 
@@ -130,12 +144,14 @@ public class EncryptUI extends javax.swing.JFrame {
             }
         });
 
-        decryptedText.setEditable(false);
-        decryptedText.setColumns(20);
-        decryptedText.setRows(5);
-        jScrollPane3.setViewportView(decryptedText);
+        decryptedTextArea.setEditable(false);
+        decryptedTextArea.setColumns(20);
+        decryptedTextArea.setRows(5);
+        jScrollPane3.setViewportView(decryptedTextArea);
 
         jLabel6.setText("Decrypted Text:");
+
+        selectedFile.setText("No file selected");
 
         javax.swing.GroupLayout jPanel2Layout = new javax.swing.GroupLayout(jPanel2);
         jPanel2.setLayout(jPanel2Layout);
@@ -159,7 +175,9 @@ public class EncryptUI extends javax.swing.JFrame {
                                         .addComponent(decryptKeyText, javax.swing.GroupLayout.PREFERRED_SIZE, 293, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(btnFileChooser))
+                                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnFileChooser, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(selectedFile, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel2Layout.createSequentialGroup()
                                 .addGap(0, 0, Short.MAX_VALUE)
                                 .addComponent(btnDecrpyt, javax.swing.GroupLayout.PREFERRED_SIZE, 155, javax.swing.GroupLayout.PREFERRED_SIZE)))
@@ -173,8 +191,13 @@ public class EncryptUI extends javax.swing.JFrame {
                     .addComponent(btnFileChooser, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(decryptKeyText, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel3))
-                .addGap(18, 18, 18)
-                .addComponent(jLabel5)
+                .addGroup(jPanel2Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(jLabel5))
+                    .addGroup(jPanel2Layout.createSequentialGroup()
+                        .addGap(7, 7, 7)
+                        .addComponent(selectedFile)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -219,17 +242,34 @@ public class EncryptUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void btnEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEncryptActionPerformed
+        
+        keygenText.setText(c.getKey());
+        encryptedText = c.encrypt(textArea.getText(),c.getKey(), true);
+        FileIO.writeFile(encryptedText, "C:\\Users\\ASUS\\Documents\\NetBeansProjects\\ProductCipher150109N\\test\\t23.txt");
+        
+    }//GEN-LAST:event_btnEncryptActionPerformed
+
+    private void btnDecrpytActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecrpytActionPerformed
+        decryptedTextArea.setText(c.encrypt(decryptText, keygenText.getText() , false));   
+    }//GEN-LAST:event_btnDecrpytActionPerformed
+
     private void decryptKeyTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptKeyTextActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_decryptKeyTextActionPerformed
 
-    private void btnEncryptActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEncryptActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnEncryptActionPerformed
-
-    private void btnDecrpytActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecrpytActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnDecrpytActionPerformed
+    private void btnFileChooserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFileChooserActionPerformed
+        JFileChooser fc=new JFileChooser();
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("TEXT FILES", "txt", "text");
+        fc.setFileFilter(filter);
+        int result=fc.showOpenDialog(null);
+        if (result == JFileChooser.APPROVE_OPTION) {
+            selectedFilePath = fc.getSelectedFile().getAbsolutePath();
+            selectedFile.setText(fc.getSelectedFile().getName());
+            decryptText = FileIO.readFile(selectedFilePath);
+            encryptedTextArea.setText(decryptText);
+        }
+    }//GEN-LAST:event_btnFileChooserActionPerformed
 
     /**
      * @param args the command line arguments
@@ -259,11 +299,7 @@ public class EncryptUI extends javax.swing.JFrame {
         //</editor-fold>
 
         /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new EncryptUI().setVisible(true);
-            }
-        });
+        
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -271,8 +307,8 @@ public class EncryptUI extends javax.swing.JFrame {
     private javax.swing.JButton btnEncrypt;
     private javax.swing.JButton btnFileChooser;
     private javax.swing.JTextField decryptKeyText;
-    private javax.swing.JTextArea decryptedText;
-    private javax.swing.JTextArea encryptedText;
+    private javax.swing.JTextArea decryptedTextArea;
+    private javax.swing.JTextArea encryptedTextArea;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -285,7 +321,8 @@ public class EncryptUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane1;
-    private javax.swing.JTextArea jTextArea1;
     private javax.swing.JTextField keygenText;
+    private javax.swing.JLabel selectedFile;
+    private javax.swing.JTextArea textArea;
     // End of variables declaration//GEN-END:variables
 }

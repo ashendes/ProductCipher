@@ -16,10 +16,16 @@ public class ProductCipher150109N {
      */
     public static void main(String[] args) {
         // TODO code application logic here
-        Cryptographer machine = new Cryptographer();
+        /*Cryptographer machine = new Cryptographer();
         String encrypted=machine.encrypt("My name is ashen. What's up yo? How you doing?", true);
         System.out.println(encrypted);
-        System.out.println(machine.encrypt(encrypted, false));
+        System.out.println(machine.encrypt(encrypted, false));*/
+        
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new EncryptUI().setVisible(true);
+            }
+        });
     }
     
 }
