@@ -6,6 +6,7 @@
 package productcipher150109n;
 
 import javax.swing.JFileChooser;
+import javax.swing.JOptionPane;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 /**
@@ -251,7 +252,11 @@ public class EncryptUI extends javax.swing.JFrame {
     }//GEN-LAST:event_btnEncryptActionPerformed
 
     private void btnDecrpytActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDecrpytActionPerformed
-        decryptedTextArea.setText(c.encrypt(decryptText, keygenText.getText() , false));   
+        if(decryptKeyText.getText().isEmpty() || decryptKeyText.getText().length()!=8){
+            JOptionPane.showMessageDialog(this, "Please enter a 8 digit key.","Error",    JOptionPane.ERROR_MESSAGE);
+        }else{            
+            decryptedTextArea.setText(c.encrypt(decryptText, keygenText.getText() , false));   
+        }
     }//GEN-LAST:event_btnDecrpytActionPerformed
 
     private void decryptKeyTextActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_decryptKeyTextActionPerformed
